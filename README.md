@@ -5,9 +5,9 @@
 After clone this project, do as following: 
 
 #### First of all, create your virtual environment
-    ```python
-    python -m venv vapp
-    ```
+```python
+python -m venv vapp
+```
 #### Run this project
 - Windows: 
     ``` PowerShell
@@ -50,3 +50,24 @@ The problem you are facing has to do with a bug in the Flask-SocketIO package wh
 3. Disable debugging
 4. Disable auto loading if debugging required `flask run --no-reload` <br/>
 ***Reference to the Flask-SocketIO bug: [issue 817](https://github.com/miguelgrinberg/Flask-SocketIO/issues/817)***
+
+#### The importance of steps of importing modules
+We should import `admin` and  `index` or other modules after create app and db, that is :
+```python
+import config
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+#Firstly, create app and init db.
+app = Flask(__name__, instance_relative_config=True)
+app.config.from_object(config.Config)
+app.config.from_pyfile('config.py') # To load instance/config.py
+
+db = SQLAlchemy(app)
+
+# Then, import blueprint modules and the register them, coz we need to use app and db in these bps.
+from .routes.admin import admin
+from .routes.index import index
+
+app.register_blueprint(admin)
+app.register_blueprint(index)
+```
