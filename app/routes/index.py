@@ -1,3 +1,6 @@
+# -*- coding: UTF-8 -*-
+
+# Define a module: index
 from flask import Blueprint, render_template
 
 index = Blueprint('index', __name__)
